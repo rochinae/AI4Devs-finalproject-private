@@ -10,6 +10,17 @@ lerna-debug.log*
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
+# idea project files
+**/.idea/
+*.iml
+
+# java binaries
+*.jar
+*.class
+
+# maven build proceeds
+**/target/
+
 # Runtime data
 pids
 *.pid
