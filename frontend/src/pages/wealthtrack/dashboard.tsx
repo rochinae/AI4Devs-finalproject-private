@@ -3,8 +3,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { fetchPortfolio, fetchValorizacionDiaria, fetchActivos } from '@/services/api';
+import { useAuth0 } from "@auth0/auth0-react";
+import { UserProfile } from "@/components/UserProfile";
 
 export default function WealthManagementDashboard() {
+  const { isAuthenticated, isLoading } = useAuth0();
+
+  if (isLoading) {
+    return <div>Loading ...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <div>Please log in to view your dashboard.</div>;
+  }
+
   const [portfolio, setPortfolio] = useState(null);
   const [valorizacionDiaria, setValorizacionDiaria] = useState([]);
   const [activos, setActivos] = useState([]);
@@ -103,6 +115,8 @@ export default function WealthManagementDashboard() {
           </Table>
         </CardContent>
       </Card>
+
+      <UserProfile />
     </div>
   );
 }
