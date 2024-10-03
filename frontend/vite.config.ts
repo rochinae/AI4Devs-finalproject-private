@@ -1,6 +1,7 @@
 import path from "path"
 import react from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
+import mkcert from 'vite-plugin-mkcert'
 
 const basenameProd = '/react-shadcn-starter'
 
@@ -9,7 +10,10 @@ export default defineConfig(({ command }) => {
 
   return {
     base: isProd ? basenameProd : '',
-    plugins: [react()],
+    plugins: [react(), mkcert()],
+    server: {
+      https: true,
+    },
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
@@ -22,3 +26,6 @@ export default defineConfig(({ command }) => {
     },
   }
 })
+
+import { defineConfig } from 'vite'
+import mkcert from 'vite-plugin-mkcert'

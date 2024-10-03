@@ -1,6 +1,5 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useState, useEffect } from "react";
-import axios from 'axios';
 
 export const useAuth = () => {
   const { 
@@ -27,23 +26,12 @@ export const useAuth = () => {
     getToken();
   }, [isAuthenticated, getAccessTokenSilently]);
 
-  const authenticatedRequest = async (url: string, options: any = {}) => {
-    if (!accessToken) {
-      throw new Error('No access token available');
-    }
-    const headers = {
-      ...options.headers,
-      Authorization: `Bearer ${accessToken}`,
-    };
-    return axios(url, { ...options, headers });
-  };
-
   return {
     isAuthenticated,
     accessToken,
     user,
     login: loginWithRedirect,
     logout: () => logout({ returnTo: window.location.origin }),
-    authenticatedRequest,
+    getAccessTokenSilently,
   };
 };
