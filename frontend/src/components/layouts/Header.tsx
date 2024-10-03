@@ -19,8 +19,10 @@ import { ChevronDownIcon, ViewVerticalIcon } from "@radix-ui/react-icons";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { Logo } from "../logo";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useAuth } from "@/hooks/useAuth";
 
 export function Header() {
+    const { isAuthenticated, login, logout } = useAuth();
     const [open, setOpen] = useState(false)
     const location = useLocation();
 
@@ -205,6 +207,11 @@ export function Header() {
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </nav>
+                    {!isAuthenticated ? (
+                        <Button onClick={() => login()}>Log In</Button>
+                    ) : (
+                        <Button onClick={() => logout()}>Log Out</Button>
+                    )}
                 </div>
             </div>
         </header>

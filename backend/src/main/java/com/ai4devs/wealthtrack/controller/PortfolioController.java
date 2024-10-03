@@ -6,35 +6,41 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/portfolio")
 @Slf4j
 public class PortfolioController {
 
     private final PortfolioService portfolioService;
 
-
     public PortfolioController(PortfolioService portfolioService) {
         this.portfolioService = portfolioService;
     }
 
-    @CrossOrigin(origins = "${app.cors.allowed-origins}")
-    @GetMapping("/portfolio")
-    public ResponseEntity<PortfolioResponse> getPortfolio() {
-        Long usuarioId = obtenerUsuarioId();
-        Optional<PortfolioResponse> portfolioAndActivesById = portfolioService.getPortfolioAndActivesById(usuarioId);
+    @GetMapping
+    public ResponseEntity<PortfolioResponse> getPortfolio(@AuthenticationPrincipal Jwt principal) {
+        Long userId = Long.valueOf(1L); // principal.getSubject());
+        // TODO change so we can retrieve different users
+        // Use userId to fetch the user's portfolio
+        log.info("calling of portfolio retrieval");
 
-        log.info("result of portfolio retrieval by id {}: {}", usuarioId,
+        Optional<PortfolioResponse> portfolioAndActivesById = portfolioService.getPortfolioAndActivesById(userId);
+
+        log.info("result of portfolio retrieval by id {}: {}", userId,
                 portfolioAndActivesById.map(PortfolioResponse::toString));
 
         return portfolioAndActivesById
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
-    
+
     private Long obtenerUsuarioId() {
         // Implementa la lógica para obtener el ID del usuario autenticado
         // Por ejemplo, mapeando el nombre de usuario a un ID

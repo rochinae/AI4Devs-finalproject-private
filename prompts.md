@@ -262,7 +262,9 @@ Quiero focalizarme en crear valor para el usuario, desde el punto de vista de un
 ---
 
 ### 7. Pull Requests
+
 ### 7.1. Backend
+https://github.com/rochinae/AI4Devs-finalproject-private/pull/1
 
 **Prompt 1:**
 Eres un experto programador de backend en Java. Crea un esqueleto de proyecto, para un microservicio de backend:
@@ -292,6 +294,8 @@ Ten en cuenta todo el @backend ya que hecho cambios en las capas repository, ser
 Refactoriza los test unitarios existentes para que sigan teniendo sentido y cubran todos los casos existentes y cualquier nuevo que pueda aparecer (cerciorate de verificar la existencia)
 
 ### 7.2. Frontend
+https://github.com/rochinae/AI4Devs-finalproject-private/pull/1
+
 **Prompt 1:**
 CREATION DE ESQUELETO DE FRONTEND - usando v0 by Vercel
 I want to create an application to do wealth management, at personal and family level, in a simple and efficient way. It has an dashboard where we have the list of assets where it displays the current value as well as the potential benefit or loss you are incurring it, among other informations. Secondly, we have a graph with the total value of the portfolio over time.
@@ -401,3 +405,11 @@ Una vez que tenga respuestas a estas preguntas, podré proceder con la refactori
 5. No es necesario en un primer momento. Anotala en un TODO en el emplazamiento donde sería adecuado
 6. La que sea más compatible con el stack técnico actual del frontend
 7. Utiliza el patrón de React que sea más sencillo de implementar, así como de mantener
+
+
+
+### 7.3. Autenticación
+PR 
+**Prompt 1:**
+
+

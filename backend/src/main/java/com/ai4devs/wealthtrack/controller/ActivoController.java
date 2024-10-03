@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/activos")
+@RequestMapping("/api/activos")
 @Slf4j
 public class ActivoController {
 
@@ -23,6 +23,7 @@ public class ActivoController {
     @CrossOrigin(origins = "${app.cors.allowed-origins}")
     @GetMapping("/{portfolioId}")
     public List<ActivoResponse> getActivoById(@PathVariable Long portfolioId) {
+        log.info("calling of activo of portfolio {}", portfolioId);
         List<ActivoResponse> activoById = activoService.getActivoById(portfolioId);
         log.info("result of activo by id {}: {}", portfolioId, activoById);
 

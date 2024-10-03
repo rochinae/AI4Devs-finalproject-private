@@ -7,7 +7,21 @@ spring:
   h2:
     console:
       enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-i1gi1fjf37cb6h6g.us.auth0.com/
+          audience: https://dev-i1gi1fjf37cb6h6g.us.auth0.com/api/v2/
 
 app:
   cors:
-    allowed-origins: "http://localhost:5173"  
+    allowed-origins: "https://localhost:5173"
+
+#  auth0.audience=https://dev-i1gi1fjf37cb6h6g.us.auth0.com/api/v2/
+#  spring.security.oauth2.resourceserver.jwt.issuer-uri=https://dev-i1gi1fjf37cb6h6g.us.auth0.com/
+
+
+auth0:
+  audience: https://dev-i1gi1fjf37cb6h6g.us.auth0.com/api/v2/
+  issuer: https://dev-i1gi1fjf37cb6h6g.us.auth0.com/

@@ -2,9 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { fetchPortfolio, fetchValorizacionDiaria, fetchActivos } from '@/services/api';
+import useApi from '@/services/api';
+import { useAuth0 } from "@auth0/auth0-react";
+import { UserProfile } from "@/components/UserProfile";
 
 export default function WealthManagementDashboard() {
+  const { isAuthenticated, isLoading } = useAuth0();
+  const api = useApi();
+
   const [portfolio, setPortfolio] = useState(null);
   const [valorizacionDiaria, setValorizacionDiaria] = useState([]);
   const [activos, setActivos] = useState([]);
@@ -12,27 +17,25 @@ export default function WealthManagementDashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        // Clear previous state
-        setPortfolio(null);
-        setValorizacionDiaria([]);
-        setActivos([]);
+      if (!isAuthenticated) return;
 
-        const portfolioData = await fetchPortfolio();
+      try {
+        const portfolioData = await api.fetchPortfolio();
         setPortfolio(portfolioData);
 
-        const valorizacionData = await fetchValorizacionDiaria(portfolioData.id);
+        const valorizacionData = await api.fetchValorizacionDiaria(portfolioData.id);
         setValorizacionDiaria(valorizacionData);
 
-        const activosData = await fetchActivos(portfolioData.id);
+        const activosData = await api.fetchActivos(portfolioData.id);
         setActivos(activosData);
       } catch (err) {
         setError('Failed to fetch data from the backend');
+        console.error(err);
       }
     };
 
     fetchData();
-  }, []);
+  }, [isAuthenticated]); // Remove api from the dependency array
 
   if (error) {
     return <div className="container mx-auto p-4">Error: {error}</div>;
@@ -103,6 +106,8 @@ export default function WealthManagementDashboard() {
           </Table>
         </CardContent>
       </Card>
+
+      <UserProfile />
     </div>
   );
 }

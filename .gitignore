@@ -14,6 +14,7 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 **/.idea/
 *.iml
 
+
 # java binaries
 *.jar
 *.class
@@ -139,3 +140,7 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# other
+.DS_Store
+.vscode/
