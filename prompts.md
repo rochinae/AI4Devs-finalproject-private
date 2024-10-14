@@ -261,7 +261,7 @@ Quiero focalizarme en crear valor para el usuario, desde el punto de vista de un
 
 ---
 
-### 7. Pull Requests
+## 7. Pull Requests
 
 ### 7.1. Backend
 https://github.com/rochinae/AI4Devs-finalproject-private/pull/1
@@ -408,8 +408,59 @@ Una vez que tenga respuestas a estas preguntas, podré proceder con la refactori
 
 
 
-### 7.3. Autenticación
-PR 
+### 7.3. Autenticación - frontend
+ 
 **Prompt 1:**
+Conoces OAuth y la implementación propuesta por Auth0? 
+
+**Prompt 2:**
+Teniendo la siguiente implementación en @frontend de Oauth (usando la libreria de Auth0) qué faltaría para hacerlo funcionar? 
+
+**Prompt 3:**
+Eres es un experto programador en ReactJS. 
+Acabo de poner en @frontend, después de hacer un chat previo contigo, una integración de auth0. Quiero que me digas que informaciones como token y otros me faltan y como extraer éstas en ficheros de configuración
+
+### 7.4. Autenticación - backend
+**Prompt 1:**
+Como haríamos ahora para integrar la autenticación, usange el token de Auth0, en el backend situado en @backend (basado en Springboot)?
+
+**Prompt 2:**
+De acuerdo, ahora la aplicación no está inyectando desde el @frontend  el Auth-token en las llamadas al backend. Por ejemplo, la siguiente llamada obtiene un 401 unauthorized http://localhost:8080/api/portfolio
+
+Aquí tienes algunos de los headers que se envían, en formato curl
+curl 'http://localhost:8080/api/portfolio' \
+  -H 'Connection: keep-alive' \
+  -H 'Origin: https://localhost:5173' \
+  -H 'Sec-Fetch-Dest: empty' \
+  -H 'Sec-Fetch-Mode: cors' \
+  -H 'Sec-Fetch-Site: cross-site' \
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36' \
 
 
+### 7.5. Infraestructura
+https://github.com/rochinae/AI4Devs-finalproject-private/pull/5/files
+
+**Prompt 1:**
+Eres un Senior devsecops engineer, necesito que crees la infrastructura necesaria para mi aplicación Wealthtrack. Quiero que uses Terraform y me que indiques los pasos a seguir para que se pueda levantar el entorno de nuevo. Externaliza en una propiedad el nombre de la aplicación, y que así pueda desplegar copias de la aplicación si así lo desease
+
+- La insfraestructura consta de 1 instancias EC2 del tipo t2.micro
+- La base de datos será en AWS RDS con motor Postgresql
+- los binarios del backend y el frontend se instalarán, bien manualmente, bien con el pipeline que será actualizado más tarde
+- Las instancias EC2 deben poder conectarse a la base de datos RDS, podrias usar un IAM policy.
+- el @backend debe ser accesible por medio del puerto 8080
+- el @frontend debe ser accesible por medio del puerto 3000
+- No es necesario solicitar keys ya que ya las configure con aws configure
+- Utiliza terraform en la carpeta @tf
+
+**Prompt 2:**
+Bueno, el plan funcionó (14 cambios a añadir) pero el apply dio dos errores:
+
+│ Error: creating EC2 Instance: operation error EC2: RunInstances, https response error StatusCode: 400, RequestID: 2709a54a-f2bc-4e7b-a943-e9d2559a3cff, api error InvalidAMIID.NotFound: The image id '[ami-0c55b159cbfafe1f0]' does not exist
+
+│ Error: creating RDS DB Instance (wealthtrack-db): operation error RDS: CreateDBInstance, https response error StatusCode: 400, RequestID: fdd11a98-dac5-4a31-bdd6-257af27c47eb, api error InvalidParameterCombination: Cannot find version 13.7 for postgres
+
+puedes ayudarme a corregir el error?
+
+**NDLR**
+La conversación ha seguido, pero no ha llegado a buen puerto. 
+Después de muchas horas intentando solucionar el problema, he decidido desplegar usando EC2 y RDS via los asistentes de AWS, en vez de usando Terraform.

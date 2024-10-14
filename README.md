@@ -81,7 +81,7 @@ La pantalla muestra una tabla con el historial de operaciones realizadas. Cada f
 Esta pantalla incluye un formulario simple para importar operaciones en masa. Tiene un área destacada para arrastrar y soltar archivos (por ejemplo, un CSV) o un botón para cargar archivos desde el dispositivo. Debajo del área de importación, hay una lista de los archivos recientemente cargados, con su estado de procesamiento (completado, en progreso, error). Al lado, hay un botón para iniciar la importación y otro para cancelar. La interfaz es clara y funcional, con indicaciones para guiar al usuario.
 
 ### **1.4. Instrucciones de instalación:**
-WIP 
+Para obtener instrucciones detalladas sobre cómo instalar y configurar WealthTrack, consulte el archivo [instalacion.md](./docs/instalacion.md).
 
 ---
 
