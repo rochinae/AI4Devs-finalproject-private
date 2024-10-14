@@ -5,6 +5,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import useApi from '@/services/api';
 import { useAuth0 } from "@auth0/auth0-react";
 import { UserProfile } from "@/components/UserProfile";
+import { Link } from 'react-router-dom';
 
 export default function WealthManagementDashboard() {
   const { isAuthenticated, isLoading } = useAuth0();
@@ -17,33 +18,54 @@ export default function WealthManagementDashboard() {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!isAuthenticated) return;
+      console.log("Authentication status:", isAuthenticated);
+      if (!isAuthenticated) {
+        console.log("User is not authenticated, skipping data fetch");
+        return;
+      }
 
       try {
+        console.log("Fetching portfolio data...");
         const portfolioData = await api.fetchPortfolio();
+        console.log("Portfolio data received:", portfolioData);
         setPortfolio(portfolioData);
 
+        console.log("Fetching valorizacion data...");
         const valorizacionData = await api.fetchValorizacionDiaria(portfolioData.id);
+        console.log("Valorizacion data received:", valorizacionData);
         setValorizacionDiaria(valorizacionData);
 
+        console.log("Fetching activos data...");
         const activosData = await api.fetchActivos(portfolioData.id);
+        console.log("Activos data received:", activosData);
         setActivos(activosData);
       } catch (err) {
+        console.error("Error fetching data:", err);
         setError('Failed to fetch data from the backend');
-        console.error(err);
       }
     };
 
     fetchData();
-  }, [isAuthenticated]); // Remove api from the dependency array
+  }, [isAuthenticated]);
 
   if (error) {
     return <div className="container mx-auto p-4">Error: {error}</div>;
   }
 
   if (!portfolio || valorizacionDiaria.length === 0 || activos.length === 0) {
-    return <div className="container mx-auto p-4">Loading...</div>;
+        return <div className="container mx-auto p-4">Loading...</div>;
   }
+
+  const renderAssetRow = (asset: Asset) => (
+    <TableRow key={asset.id}>
+      <TableCell>
+        <Link to={`/portfolio/${portfolioData.id}/asset/${asset.id}/operations`}>
+          {asset.nombre} ({asset.ticker})
+        </Link>
+      </TableCell>
+      {/* ... other table cells ... */}
+    </TableRow>
+  );
 
   return (
     <div className="container mx-auto p-4">
@@ -88,8 +110,10 @@ export default function WealthManagementDashboard() {
               {activos.map((activo) => (
                 <TableRow key={activo.ticker}>
                   <TableCell>
-                    <div>{activo.nombre}</div>
-                    <div className="text-sm text-muted-foreground">{activo.ticker}</div>
+                    <Link to={`/portfolio/${portfolio.id}/asset/${activo.id}/operations`}>
+                      <div>{activo.nombre}</div>
+                      <div className="text-sm text-muted-foreground">{activo.ticker}</div>
+                    </Link>
                   </TableCell>
                   <TableCell>{activo.fechaCompra}</TableCell>
                   <TableCell>${activo.precioTotalCoste.toFixed(2)}</TableCell>

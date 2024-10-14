@@ -3,6 +3,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import { router } from "./Router";
 import { Auth0Provider } from "@auth0/auth0-react";
 import { auth0Config } from "./config/auth0";
+import AssetOperations from './pages/wealthtrack/AssetOperations';
 
 export default function App() {
     return (
