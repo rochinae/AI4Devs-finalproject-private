@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://wealthtrack-db.cjqwswuu4hqv.eu-west-1.rds.amazonaws.com:5432/wealthtrackdb?currentSchema=wealth_data
+    username: backendUser
+    password: zRkN6Fw&JFm
+    driver-class-name: org.postgresql.Driver
+  h2:
+    console:
+      enabled: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-i1gi1fjf37cb6h6g.us.auth0.com/
+          audience: https://dev-i1gi1fjf37cb6h6g.us.auth0.com/api/v2/
+app:
+  cors:
+    allowed-origins: "https://localhost:5173"
+
+auth0:
+  audience: https://dev-i1gi1fjf37cb6h6g.us.auth0.com/api/v2/
+  issuer: https://dev-i1gi1fjf37cb6h6g.us.auth0.com/
