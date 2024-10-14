@@ -1,0 +1,31 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Effect": "Allow",
+        "Action": [
+          "ec2:*",
+          "rds:*",
+          "iam:*",
+          "elasticloadbalancing:*",
+          "autoscaling:*",
+          "cloudwatch:*",
+          "s3:*",
+          "sns:*",
+          "cloudformation:*",
+          "route53:*",
+          "logs:*"
+        ],
+        "Resource": "*"
+      },
+      {
+        "Effect": "Allow",
+        "Action": [
+            "s3:CreateBucket",
+            "s3:PutBucketPolicy",
+            "s3:PutBucketTagging"
+        ],
+        "Resource": "arn:aws:s3:::wealthtrack-artifacts"
+      }
+    ]
+  }
