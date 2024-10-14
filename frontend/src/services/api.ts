@@ -13,7 +13,9 @@ const useApi = () => {
 
   const getAuthHeaders = async () => {
     try {
+      console.log("Getting access token...");
       const token = await getAccessTokenSilently();
+      console.log("Access token received:", token ? "Token present" : "No token");
       return {
         Authorization: `Bearer ${token}`
       };
@@ -24,8 +26,10 @@ const useApi = () => {
   };
 
   const fetchPortfolio = async () => {
+    console.log("Fetching portfolio...");
     const headers = await getAuthHeaders();
     const response = await axios.get(API_URLS.portfolio, { headers });
+    console.log("Portfolio response:", response.data);
     return response.data;
   };
 
@@ -41,6 +45,15 @@ const useApi = () => {
     return response.data;
   };
 
+  export const getAssetOperations = async (portfolioId: number, assetId: number): Promise<{
+    assetName: string;
+    assetTicker: string;
+    operations: AssetOperation[];
+  }> => {
+    const response = await axios.get(`${API_HOST}:${API_PORT}/api/activos/${portfolioId}/${assetId}/operations`);
+    return response.data;
+  };
+
   return {
     fetchPortfolio,
     fetchValorizacionDiaria,
@@ -49,4 +62,3 @@ const useApi = () => {
 };
 
 export default useApi;
-
