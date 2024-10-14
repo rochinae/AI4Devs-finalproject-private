@@ -12,7 +12,9 @@ export default defineConfig(({ command }) => {
     base: isProd ? basenameProd : '',
     plugins: [react(), mkcert()],
     server: {
-      https: true,
+      host: '0.0.0.0', // Listen on all interfaces
+      port: 5173, // Ensure this matches the port you're trying to access
+      https: false // Set to false if you want to use HTTP
     },
     resolve: {
       alias: {
@@ -27,5 +29,3 @@ export default defineConfig(({ command }) => {
   }
 })
 
-import { defineConfig } from 'vite'
-import mkcert from 'vite-plugin-mkcert'
