@@ -26,7 +26,12 @@ Quiere ser capaz de mostrar la evolución del patrimonio a lo largo del tiempo, 
 
 ### **0.4. URL del proyecto:**
 
-WIP
+https://wealthtrack.chickenkiller.com/
+Para contemplar la funcionalidad, es necesario usar el usuario y contraseña de demo:  
+```
+Usuario: alpaca.louse1682@eagereverest.com
+Contraseña: Ai4devsTeam!
+```
 
 ### **0.5. URL o archivo comprimido del repositorio**
 
@@ -109,9 +114,6 @@ Cierto es que la tecnología utilizada
 
 ### **2.2. Descripción de componentes principales:**
 
-    > Describe los componentes más importantes, incluyendo la tecnología utilizada
-
-
 ### **1. Frontend**
 **Tecnología:** React.js + Bootstrap
 **Descripción:** React.js es una biblioteca de JavaScript para construir interfaces de usuario. Es mantenida por Facebook y una comunidad de desarrolladores individuales y empresas. También se prevee el uso de Bootstrap para obtener un diseño de la interfaz de usuario más atractivo y moderno, con coste limitado. Para ello, utilizaremos React-Bootstrap, que es la librería de componentes de Bootstrap para React.
@@ -184,64 +186,244 @@ Estos componentes, combinados, proporcionan una arquitectura robusta, escalable 
 
 ### **2.5. Seguridad**
 
-> Enumera y describe las prácticas de seguridad principales que se han implementado en el proyecto, añadiendo ejemplos si procede
+Se ha usado JWT para la autenticación de usuarios, dejando la página de login en auth0.com así como el registro de los usuarios en esta plataforma.
+Este token de acceso se guarda en el Local Storage del navegador y se envía en cada petición al backend.
 
 ### **2.6. Tests**
 
-> Describe brevemente algunos de los tests realizados
-
+Para la primera historia de usuario, se han creado tests unitarios para los servicios y controladores, usando una estrategia de desarrollo TDD.
+Se ha usado JUnit para la realización de los tests unitarios, como los de integración, usando SpringBoot. Desafortunadamente, los tests de integración daba problemas con la carga de librerías así que lo he dejado para más tarde, ya que estaba generando retrasos en el resto del proyecto.
 ---
 
 ## 3. Modelo de Datos
 
 ### **3.1. Diagrama del modelo de datos:**
+```mermaid
+erDiagram
+    PORTFOLIOS ||--o{ ACTIVOS : contains
+    PORTFOLIOS ||--o{ VALORIZACIONESDIARIAS : has
+    ACTIVOS ||--o{ PRECIOSACTIVOS : has
 
-> Recomendamos usar mermaid para el modelo de datos, y utilizar todos los parámetros que permite la sintaxis para dar el máximo detalle, por ejemplo las claves primarias y foráneas.
+    PORTFOLIOS {
+        int id PK
+        varchar nombre
+        varchar divisa_principal
+        date fecha_creacion
+        decimal valor_actual
+    }
 
+    ACTIVOS {
+        int id PK
+        int portfolio_id FK
+        varchar tipo
+        varchar nombre
+        varchar ticker
+        varchar divisa
+        decimal tipo_cambio_divisa_compra
+        date fecha_compra
+        int numero_titulos
+        decimal precio_medio_unitario
+        decimal coste_comisiones
+        decimal precio_total_coste
+        decimal precio_actual
+        decimal ultima_valorizacion
+        date fecha_actualizacion
+        decimal tasa_interes_nominal
+        int plazo_inversion
+        decimal precio_unitario_venta
+        decimal tipo_cambio_divisa_venta
+    }
 
-### **3.2. Descripción de entidades principales:**
+    VALORIZACIONESDIARIAS {
+        int id PK
+        int portfolio_id FK
+        date fecha
+        decimal valor
+    }
 
-> Recuerda incluir el máximo detalle de cada entidad, como el nombre y tipo de cada atributo, descripción breve si procede, claves primarias y foráneas, relaciones y tipo de relación, restricciones (unique, not null…), etc.
+    PRECIOSACTIVOS {
+        int id PK
+        int activo_id FK
+        date fecha
+        decimal precio_cierre
+        decimal precio_apertura
+        decimal precio_maximo
+        decimal precio_minimo
+        int volumen
+    }   
+```
 
 ---
 
 ## 4. Especificación de la API
 
-> Si tu backend se comunica a través de API, describe los endpoints principales (máximo 3) en formato OpenAPI. Opcionalmente puedes añadir un ejemplo de petición y de respuesta para mayor claridad
+El frontend se comunica con el backend mediante una API REST, definida en el archivo @openapi.yaml.
+Los endpoints necesitan la presencia del token de acceso en el header de la petición, que se obtiene del login en auth0.com.
+
+Éste implicitamente da el nombre de usuario, el cual se asocia a un portfolio, y esto se tiene en cuenta en los diferentes endpoints. Está previsto que los diferentes endpoints hagan verificación de accesos, que sea relativo al portfolio del usuario conectado.
+
+### **4.1. Detalles de portfolio**
+/api/portfolio
+```json
+{
+    "id": 1,
+    "nombre": "Ai4devs",
+    "divisaPrincipal": "USD",
+    "fechaCreacion": "2024-02-20",
+    "valorActual": 20000.0
+}
+```
+
+### **4.2. Listado de activos de un portfolio**
+/api/activos/{portfolioId}
+```json
+[
+    {
+        "id": 1,
+        "portfolioId": 1,
+        "tipo": null,
+        "nombre": "Microsoft",
+        "ticker": "MSFT",
+        "divisa": "USD",
+        "tipoCambioDivisaCompra": 1.000000,
+        "fechaCompra": "2024-08-14",
+        "numeroTitulos": 20,
+        "precioMedioUnitario": 200.000000,
+        "costeComisiones": 2.00,
+        "precioTotalCoste": 4002.00,
+        "precioActual": 300.00,
+        "ultimaValorizacion": 6000.00,
+        "fechaActualizacion": null,
+        "tasaInteresNominal": null,
+        "plazoInversion": null,
+        "precioUnitarioVenta": null,
+        "tipoCambioDivisaVenta": null,
+        "ganancia": 1998.0,
+        "gananciaPorcentaje": 49.925
+    },
+    {
+        "id": 2,
+        "portfolioId": 1,
+        "tipo": null,
+        "nombre": "Nvidia",
+        "ticker": "NVDA",
+        "divisa": "USD",
+        "tipoCambioDivisaCompra": 1.000000,
+        "fechaCompra": "2024-08-14",
+        "numeroTitulos": 20,
+        "precioMedioUnitario": 100.000000,
+        "costeComisiones": 2.00,
+        "precioTotalCoste": 2002.00,
+        "precioActual": 130.00,
+        "ultimaValorizacion": 2600.00,
+        "fechaActualizacion": null,
+        "tasaInteresNominal": null,
+        "plazoInversion": null,
+        "precioUnitarioVenta": null,
+        "tipoCambioDivisaVenta": null,
+        "ganancia": 598.0,
+        "gananciaPorcentaje": 29.8701
+    }
+]
+```
+
+### **4.3. Listado de valorizaciones del portfolio**
+/api/valorizacion-diaria/1
+```json
+[
+    {
+        "id": 3,
+        "portfolioId": 1,
+        "fecha": "2024-10-08",
+        "valor": 18700.00
+    },
+    {
+        "id": 2,
+        "portfolioId": 1,
+        "fecha": "2024-10-09",
+        "valor": 18400.00
+    },
+    {
+        "id": 1,
+        "portfolioId": 1,
+        "fecha": "2024-10-10",
+        "valor": 19900.00
+    },
+    {
+        "id": 4,
+        "portfolioId": 1,
+        "fecha": "2024-10-14",
+        "valor": 20000.00
+    }
+]
+```
+
 
 ---
 
 ## 5. Historias de Usuario
 
-> Documenta 3 de las historias de usuario principales utilizadas durante el desarrollo, teniendo en cuenta las buenas prácticas de producto al respecto.
-
-**Historia de Usuario 1**
-
-**Historia de Usuario 2**
-
-**Historia de Usuario 3**
+```csv
+Id,Summary, Reporter, Issue Type, Priority
+1, Registro de Usuario, enrique.rochina@gmail.com, Story, 100
+2, Inicio de Sesión, enrique.rochina@gmail.com, Story, 110
+3, Visualización de Resumen de Activos, enrique.rochina@gmail.com, Story, 400
+4, Visualización de Evolución Global del Patrimonio, enrique.rochina@gmail.com, Story, 350
+5, Visualización de Historial de Operaciones, enrique.rochina@gmail.com, Story, 200
+6, Importación Masiva de Operaciones, enrique.rochina@gmail.com, Story, 300
+7, Adición de Nueva Operación, enrique.rochina@gmail.com, Story, 350
+8, Actualización de Datos de Activos desde Yahoo Finance, enrique.rochina@gmail.com, Story, 300
+9, Gestión de Perfil de Usuario, enrique.rochina@gmail.com, Story, 80
+10, Exportación de Datos de Activos, enrique.rochina@gmail.com, Story, 50
+11, Notificaciones de Cambios en el Valor de Activos, enrique.rochina@gmail.com, Story, 100
+12, Filtrado y Búsqueda en Historial de Operaciones, enrique.rochina@gmail.com, Story, 180
+13, Visualización de Detalles de un Activo, enrique.rochina@gmail.com, Story, 380
+14, Configuración de Preferencias de Visualización, enrique.rochina@gmail.com, Story, 100
+15, Gestión de Seguridad y Autenticación con JWT, enrique.rochina@gmail.com, Story, 120
+16, Soporte Multimoneda para Activos, enrique.rochina@gmail.com, Story, 190
+```
 
 ---
 
-## 6. Tickets de Trabajo
+## 6. Tickets de trabajo
+Todos se han creado en https://enriquer.atlassian.net/jira/software/projects/SCRUM/boards/1
 
-> Documenta 3 de los tickets de trabajo principales del desarrollo, uno de backend, uno de frontend, y uno de bases de datos. Da todo el detalle requerido para desarrollar la tarea de inicio a fin teniendo en cuenta las buenas prácticas al respecto. 
+### 6.1 Implementar inicio de sesión en el frontend
+Crear endpoint para autenticar usuarios y generar JWT. Integrar el frontend con Auth0.
 
-**Ticket 1**
+### 6.2 Implementar autenticación en el backend con JWT 
+Modificar el frontend para que las llamadas se inyecte el token de acceso en el header.
+Modificar el backend para que todos los endpoints necesiten autenticación y se validen mediante el token.
 
-**Ticket 2**
+### 6.3 Crear pantalla de resumen de activos
+Desarrollar la interfaz de usuario para mostrar la lista de activos y su valor actual
 
-**Ticket 3**
+### 6.4 Crear pantalla de evolución global del patrimonio
+Desarrollar la interfaz de usuario para mostrar la gráfica de evolución del patrimonio
 
----
 
 ## 7. Pull Requests
 
-> Documenta 3 de las Pull Requests realizadas durante la ejecución del proyecto
-
 **Pull Request 1**
+https://github.com/rochinae/AI4Devs-finalproject-private/pull/1
+Contiene varios tickets de trabajo, en realidad se me olvidó separarlos en diferentes pull requests.
+En realidad tiene una base bastante común y todavía era una fase de pruebas en la que todo era bastante inseguro de que fuera a funcionar.
 
 **Pull Request 2**
+https://github.com/rochinae/AI4Devs-finalproject-private/pull/2
+Implementación de la autenticación con JWT, tanto en el frontend como en el backend.
 
 **Pull Request 3**
+Intento de gestionar la parte infra con Terraform/Opentofu (fallido)
+https://github.com/rochinae/AI4Devs-finalproject-private/pull/5/files
+Muchos problemas con los permisos, parecido a durante la sesión que tuvimos en clase.
+Me hizo perder mucho tiempo, durante mi última semana de trabajo, y no lo he conseguido hacer funcionar.
+
+**Pull Request 4**
+https://github.com/rochinae/AI4Devs-finalproject-private/commit/e03f4271054f9a6e1a3987e6165735b9cedc186b
+Añadiendo el Continuous Integration con Github Actions
+
+**Pull Request 5**
+Añadiendo pantalla detalles de activo (inacabada)
+https://github.com/rochinae/AI4Devs-finalproject-private/pull/6
 
